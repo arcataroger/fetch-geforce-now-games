@@ -1,5 +1,16 @@
 name: "Fetch games and commit"
 description: 'Fetch list of compatible Steam IDs from Nvidia and commit that to a file'
 runs:
-  using: 'node20'
-  main: 'main.js'
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 'lts/*'
+        run: |
+            node main.js
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add latest-geforce-now-games.json
+            git commit -m "Updated games list on ${{ github.event.repository.updated_at}}"
+            git push
