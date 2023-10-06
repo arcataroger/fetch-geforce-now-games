@@ -87,7 +87,7 @@ const getSteamIds = async () => {
 getSteamIds().then((ids) => {
     const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
     fs.writeFile('data.js', `
-    // Last updated ${new Date().toISOString()} with ${ids.length} games
+    // ${ids.length} Steam games in the list 
     const steamIdsOnGeForceNow = new Set(${JSON.stringify(ids.sort(collator.compare))})`,
         (error) => error && console.error("Failed to save games list", error))
 });
