@@ -12,6 +12,6 @@ runs:
         node ${{github.action_path}}/main.js
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git add latest-geforce-now-games.json
+        git add data.js
         git commit -m "Updated games list on ${{ github.event.repository.updated_at}}"
         git push
