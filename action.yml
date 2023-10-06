@@ -1,0 +1,5 @@
+name: "Fetch games and commit"
+description: 'Fetch list of compatible Steam IDs from Nvidia and commit that to a file'
+runs:
+  using: 'node20'
+  main: 'main.js'
