@@ -66,10 +66,13 @@ const getSteamIds = async () => {
         const responseJSON = await fetchGamesResponse.json();
         Object.values(responseJSON.data).forEach((page) => {
             page.items.forEach((game) => {
-                if (!game.variants[0]?.storeId) {
+                if (!game.variants[0]?.storeId || typeof (game.variants[0].storeId) !== 'string') {
                     return;
                 }
-                steamIdsOfGamesOnGeForceNow.add(game.variants[0].storeId);
+                const numericId = Number(game.variants[0].storeId)
+                if (numericId && typeof (numericId === 'number')) { // Test on local node will sometimes make a "Fake" entry
+                    steamIdsOfGamesOnGeForceNow.add(numericId);
+                }
             });
         });
         return [...steamIdsOfGamesOnGeForceNow];
@@ -79,5 +82,7 @@ const getSteamIds = async () => {
 };
 
 getSteamIds().then((ids) => {
-    fs.writeFile('latest-geforce-now-games.js', `const steamIdsOnGeForceNow = new Set(${ids})`)
+    const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+    fs.writeFile('latest-geforce-now-games.json', JSON.stringify(ids.sort(collator.compare)),
+        (error) => error && console.error("Failed to save games list", error))
 });
