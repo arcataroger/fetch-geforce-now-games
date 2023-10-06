@@ -1,4 +1,4 @@
-// WARNING: Don't include this in manifest.json or it'll auto-execute on every page
+const fs = require('fs')
 
 /* This is the official API used by the GFN Games Page at https://www.nvidia.com/en-us/geforce-now/games/
 While officially undocumented, a third-party developer, Ighor July (@JulyIghor at https://github.com/JulyIghor), documented its inner workings in a blog post: https://ighor.medium.com/i-unlocked-nvidia-geforce-now-and-stumbled-upon-pirates-dc48a3f8ff7
@@ -61,22 +61,23 @@ const getSteamIds = async () => {
         method: "POST",
     };
 
-    const fetchGamesResponse = await fetch(GFN_API_URL, fetchConfig);
-    const responseJSON = await fetchGamesResponse.json();
-
-    Object.values(responseJSON.data).forEach((page) => {
-        page.items.forEach((game) => {
-            if (!game.variants[0]?.storeId) {
-                return;
-            }
-            steamIdsOfGamesOnGeForceNow.add(game.variants[0].storeId);
+    try {
+        const fetchGamesResponse = await fetch(GFN_API_URL, fetchConfig);
+        const responseJSON = await fetchGamesResponse.json();
+        Object.values(responseJSON.data).forEach((page) => {
+            page.items.forEach((game) => {
+                if (!game.variants[0]?.storeId) {
+                    return;
+                }
+                steamIdsOfGamesOnGeForceNow.add(game.variants[0].storeId);
+            });
         });
-    });
-
-    return [...steamIdsOfGamesOnGeForceNow];
+        return [...steamIdsOfGamesOnGeForceNow];
+    } catch (error) {
+        console.error("Failed to fetch games", error)
+    }
 };
 
 getSteamIds().then((ids) => {
-    console.log(JSON.stringify(ids))
-    console.log(`Total games listed: ${ids.length}`)
+    fs.writeFile('latest-geforce-now-games.js', `const steamIdsOnGeForceNow = new Set(${ids})`)
 });
