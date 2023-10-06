@@ -75,6 +75,9 @@ const getSteamIds = async () => {
                 }
             });
         });
+        if (steamIdsOfGamesOnGeForceNow.size() < 1000) {
+            throw Error("Unexpected decrease in number of games (fewer than 1000)")
+        }
         return [...steamIdsOfGamesOnGeForceNow];
     } catch (error) {
         console.error("Failed to fetch games", error)
