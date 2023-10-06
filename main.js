@@ -75,7 +75,7 @@ const getSteamIds = async () => {
                 }
             });
         });
-        if (steamIdsOfGamesOnGeForceNow.size() < 1000) {
+        if (steamIdsOfGamesOnGeForceNow.size < 1000) {
             throw Error("Unexpected decrease in number of games (fewer than 1000)")
         }
         return [...steamIdsOfGamesOnGeForceNow];
