@@ -4,10 +4,6 @@ runs:
   using: 'composite'
   steps:
     - uses: actions/checkout@v4
-      with:
-        sparse-checkout: |
-          latest-geforce-now-games.json
-        sparse-checkout-cone-mode: false
     - uses: actions/setup-node@v3
       with:
         node-version: 'lts/*'
