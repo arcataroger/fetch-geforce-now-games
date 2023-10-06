@@ -9,7 +9,7 @@ runs:
         node-version: 'lts/*'
     - shell: bash
       run: |
-        node main.js
+        node ${{github.action_path}}/main.js
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add latest-geforce-now-games.json
